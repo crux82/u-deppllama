@@ -1,5 +1,5 @@
 # Introduction
-This repository contains the code for "_U-DepPLLaMA: Universal Dependency Parsing via Auto-regressive Large Language Models_" published in the _Italian Journal of Computational Linguistics_ by Claudiu Daniel Hromei, Danilo Croce and Roberto Basili, University of Rome Tor Vergata. The paper is available [here](https://journals.openedition.org/ijcol/1352).
+This repository contains the code for "_U-DepPLLaMA: Universal Dependency Parsing via Auto-regressive Large Language Models_" published in the _Italian Journal of Computational Linguistics_ by Claudiu Daniel Hromei, Danilo Croce and Roberto Basili, University of Rome Tor Vergata. The paper is available [here](https://www.ai-lc.it/wp-content/uploads/2024/08/IJCOL_10_1_2_hromei_et_al.pdf).
 
 The paper explores the capabilities of Large Language Models (LLMs) like LLaMA in syntactic parsing tasks. We introduce `U-DepPLLaMA`, a novel architecture that treats Dependency Parsing as a sequence-to-sequence problem, achieving state-of-the-art results in **26 languages** from the **Universal Dependency Treebank**. Our approach demonstrates that LLMs can handle dependency parsing without the need for specialized architectures, showing robust performance even with complex sentence structures.
 
@@ -78,15 +78,8 @@ with torch.no_grad():
 s = gen_outputs.sequences[0]
 output = tokenizer.decode(s, skip_special_tokens=True)
 
-if "### Answer:" in output:
-    response = output.split("### Answer:")[1].rstrip().lstrip()
-else:
-    response = "UNK"
-    print("WARNING")
-    print(row)
-    print(output)
-    print("\n--------------------\n")
-```
+response = output.split("### Answer:")[1].rstrip().lstrip()
+print(response)
 
 # Notes
 This software is released as is, along with the [LLaMA](https://ai.meta.com/llama/license/) and [UD](https://github.com/UniversalDependencies/LICENSE) licenses.
