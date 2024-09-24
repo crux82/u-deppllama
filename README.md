@@ -44,6 +44,18 @@ pip install -r requirements.txt
 
 # How to use it
 ```Python
+import transformers
+import torch
+from transformers import BitsAndBytesConfig, AutoModelForCausalLM, AutoTokenizer, GenerationConfig
+from peft import PeftModel
+
+quant_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16
+)
+
 model = AutoModelForCausalLM.from_pretrained(
             "meta-llama/Llama-2-13b-hf",
             load_in_4bit=True,
@@ -57,13 +69,21 @@ model = PeftModel.from_pretrained(
             "sag-uniroma2/u-depp-llama-2-13b"
         )
 
+generation_config = GenerationConfig(
+        num_beams=4,
+        do_sample=False,
+        early_stopping=True,
+    )
+
+tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-13b-hf", trust_remote_code=True)
+
 input_string = "He was most widely recognized for some of his books."
 prompt = f"""
 ### Input:
 {input_string}
 ### Answer:"""
 
-inputs = tokenizer(prompt, return_tensors="pt", padding=do_padding, truncation=True, max_length=CUTOFF_LEN)
+inputs = tokenizer(prompt, return_tensors="pt", padding=True, truncation=True, max_length=512)
 input_ids = inputs["input_ids"].to(model.device)
 
 with torch.no_grad():
@@ -72,7 +92,7 @@ with torch.no_grad():
         generation_config=generation_config,
         return_dict_in_generate=True,
         output_scores=True,
-        max_new_tokens=MAX_NEW_TOKENS,
+        max_new_tokens=1024,
         use_cache=True,
     )
 s = gen_outputs.sequences[0]
