@@ -80,6 +80,7 @@ output = tokenizer.decode(s, skip_special_tokens=True)
 
 response = output.split("### Answer:")[1].rstrip().lstrip()
 print(response)
+```
 
 # Notes
 This software is released as is, along with the [LLaMA](https://ai.meta.com/llama/license/) and [UD](https://github.com/UniversalDependencies/LICENSE) licenses.
